@@ -8,21 +8,20 @@ branding:
 # This is pinned to the last major release, we have to bump it for each action version.
 inputs:
   release:
-    description: kyverno CLI release version to be installed
+    description: Kyverno CLI release version to be installed
     required: false
-    default: v2.1.1
+    default: v1.10.3
   install-dir:
     description: Where to install the kyverno CLI binary
     required: false
     default: $HOME/.kyverno
   use-sudo:
-    description: set to true if install-dir location requires sudo privs
+    description: Set to true if install-dir location requires sudo privs
     required: false
     default: 'false'
 runs:
-  using: "composite"
+  using: composite
   steps:
-    # We verify the version against a SHA **in the published action itself**, not in the GCS bucket.
     - shell: bash
       run: |
         #!/bin/bash
@@ -49,3 +48,78 @@ runs:
           ln -s $GOBIN/kubectl-kyverno ${{ inputs.install-dir}}/kubectl-kyverno
           exit 0
         fi
+
+        executable_name=kubectl-kyverno
+
+        trap "popd >/dev/null" EXIT
+
+        pushd ${{ inputs.install-dir }} > /dev/null
+
+        case ${{ runner.os }} in
+          Linux)
+            case ${{ runner.arch }} in
+              X64)
+                release_archive='linux_x86_64.tar.gz'
+                ;;
+
+              ARM64)
+                release_archive='linux_arm64.tar.gz'
+                ;;
+
+              *)
+                log_error "unsupported architecture ${{ runner.arch }}"
+                exit 1
+                ;;
+            esac
+            ;;
+
+          macOS)
+            case ${{ runner.arch }} in
+              X64)
+                release_archive='darwin_x86_64.tar.gz'
+                ;;
+
+              ARM64)
+                release_archive='darwin_arm64.tar.gz'
+                ;;
+
+              *)
+                log_error "unsupported architecture ${{ runner.arch }}"
+                exit 1
+                ;;
+            esac
+            ;;
+
+          Windows)
+            case ${{ runner.arch }} in
+              X64)
+                release_archive='windows_x86_64.zip'
+                ;;
+
+              *)
+                log_error "unsupported architecture ${{ runner.arch }}"
+                exit 1
+                ;;
+            esac
+            ;;
+          *)
+            log_error "unsupported os ${{ runner.os }}"
+            exit 1
+            ;;
+        esac
+
+        SUDO=
+        if [[ "${{ inputs.use-sudo }}" == "true" ]] && command -v sudo >/dev/null; then
+          SUDO=sudo
+        fi
+
+        semver='^v([0-9]+\.){0,2}(\*|[0-9]+)(-?r?c?)(\.[0-9]+)$'
+        if [[ ${{ inputs.release }} =~ $semver ]]; then
+          log_info "Custom version '${{ inputs.release }}' requested"
+        else
+          log_error "Unable to validate requested version: '${{ inputs.release }}'"
+          exit 1
+        fi
+
+        log_info "Downloading Kyverno CLI version '${{ inputs.release }}'...\n      https://github.com/kyverno/kyverno/releases/download/${{ inputs.release }}/kyverno-cli_${{ inputs.release }}_${release_archive}"
+        $SUDO curl -sL https://github.com/kyverno/kyverno/releases/download/${{ inputs.release }}/kyverno-cli_${{ inputs.release }}_${release_archive}
