@@ -147,54 +147,54 @@ jobs:
           release: honk
         continue-on-error: true
 
-  # test_cosign_action_custom_dir:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [macos-latest, ubuntu-latest, windows-latest]
-  #   permissions: {}
-  #   name: Install Custom Cosign and test presence in path
-  #   steps:
-  #     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-  #     - name: Install Kyverno CLI
-  #       uses: ./
-  #       with:
-  #         install-dir: "$HOME/.cosigntest"
-  #     - name: Check install!
-  #       run: cosign version
-  #     - name: Check install dir!
-  #       run: |
-  #         [[ $(dirname "$(which cosign)") == "$HOME/.cosigntest" ]]
-  #       shell: bash
-  #     - name: Check root directory
-  #       run: |
-  #         [[ -z $(git diff --stat) ]]
-  #       shell: bash
+  custom_dir:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    permissions: {}
+    name: Install Kyverno CLI and test presence in path
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - name: Install Kyverno CLI
+        uses: ./
+        with:
+          install-dir: "$HOME/.kyvernotest"
+      - name: Check install
+        run: kyverno version
+      - name: Check install dir
+        shell: bash
+        run: |
+          [[ $(dirname "$(which kyverno)") == "$HOME/.kyvernotest" ]]
+      - name: Check root directory
+        shell: bash
+        run: |
+          [[ -z $(git diff --stat) ]]
 
-  # test_cosign_action_custom_dir_root:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest]
-  #   permissions: {}
-  #   name: Install Custom Cosign and test presence in path with custom root dir
-  #   steps:
-  #     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-  #     - name: Install Kyverno CLI
-  #       uses: ./
-  #       with:
-  #         install-dir: /usr/bin
-  #         use-sudo: true
-  #     - name: Check install!
-  #       run: cosign version
-  #     - name: Check install dir!
-  #       run: |
-  #         [[ $(dirname "$(which cosign)") == /usr/bin ]]
-  #       shell: bash
-  #     - name: Check root directory
-  #       run: |
-  #         [[ -z $(git diff --stat) ]]
-  #       shell: bash
+  custom_dir_root:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    permissions: {}
+    name: Install Kyverno CLI and test presence in path with custom root dir
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - name: Install Kyverno CLI
+        uses: ./
+        with:
+          install-dir: /usr/bin
+          use-sudo: true
+      - name: Check install
+        run: kyverno version
+      - name: Check install dir
+        shell: bash
+        run: |
+          [[ $(dirname "$(which kyverno)") == /usr/bin ]]
+      - name: Check root directory
+        shell: bash
+        run: |
+          [[ -z $(git diff --stat) ]]
 
   main:
     permissions: {}
@@ -219,5 +219,5 @@ jobs:
         uses: ./
         with:
           release: main
-      - name: Check install!
+      - name: Check install
         run: kyverno version
