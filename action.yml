@@ -127,7 +127,7 @@ runs:
 
         tar -xvf ${release_archive}
 
-        $SUDO chmod +x kubectl-kyverno
+        $SUDO chmod +x kyverno
 
         log_info "Installation complete!"
 
