@@ -124,6 +124,13 @@ runs:
 
         log_info "Downloading Kyverno CLI version '${{ inputs.release }}'...\n      ${release_archive_url}"
         $SUDO curl -sL ${release_archive_url} -o ${release_archive}
+
+        tar -xvf ${release_archive}
+
+        $SUDO chmod +x kubectl-kyverno
+
+        log_info "Installation complete!"
+
     - if: ${{ runner.os == 'Linux' || runner.os == 'macOS' }}
       run: echo "${{ inputs.install-dir }}" >> $GITHUB_PATH
       shell: bash
