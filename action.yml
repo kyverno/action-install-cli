@@ -125,8 +125,9 @@ runs:
         log_info "Downloading Kyverno CLI version '${{ inputs.release }}'...\n      ${release_archive_url}"
         $SUDO curl -sL ${release_archive_url} -o ${release_archive}
 
-        tar -xvf ${release_archive}
+        tar -xvf ${release_archive} kyverno
 
+        $SUDO rm ${release_archive}
         $SUDO chmod +x kyverno
 
         log_info "Installation complete!"
