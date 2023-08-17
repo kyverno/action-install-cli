@@ -220,4 +220,4 @@ jobs:
         with:
           release: main
       - name: Check install!
-        run: kubectl-kyverno version
+        run: kyverno version
