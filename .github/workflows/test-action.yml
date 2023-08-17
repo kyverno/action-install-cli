@@ -42,7 +42,7 @@ jobs:
       - name: Install Kyverno CLI
         uses: ./
         with:
-          cosign-release: 'v1.9.5'
+          release: 'v1.9.5'
       - name: Check install
         run: kyverno version
       - name: Check root directory
