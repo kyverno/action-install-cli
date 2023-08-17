@@ -19,7 +19,7 @@ jobs:
       - name: Install Kyverno CLI
         uses: ./
       - name: Check install
-        run: kubectl-kyverno version
+        run: kyverno version
       - name: Check root directory
         shell: bash
         run: |
