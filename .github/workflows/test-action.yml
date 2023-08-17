@@ -208,6 +208,7 @@ jobs:
         go_version:
           - '1.19'
           - '1.20'
+          - '1.21'
     name: Try to install with go ${{ matrix.go_version }}
     steps:
       - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
