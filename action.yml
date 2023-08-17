@@ -129,15 +129,15 @@ runs:
 
         case ${{ runner.os }} in
           Linux)
-            tar -xvf ${release_archive} kyverno
+            $SUDO tar -xvf ${release_archive} kyverno
             ;;
 
           macOS)
-            tar -xvf ${release_archive} kyverno
+            $SUDO tar -xvf ${release_archive} kyverno
             ;;
 
           Windows)
-            unzip ${release_archive} kyverno.exe
+            $SUDO unzip ${release_archive} kyverno.exe
             ;;
 
           *)
