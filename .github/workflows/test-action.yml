@@ -30,107 +30,30 @@ jobs:
             exit 0
           fi
 
-  # test_existing_release_action:
-  #   # this does not run on macOS as the support for multi-arch was not added yet
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest]
-  #   permissions: {}
-  #   name: Install existing release of Cosign and test presence in path
-  #   steps:
-  #     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-  #     - name: Install Kyverno CLI
-  #       uses: sigstore/cosign-installer@dd6b2e2b610a11fd73dd187a43d57cc1394e35f9 # v3.0.5
-  #     - name: Check install!
-  #       run: cosign version
-  #     - name: Check root directory
-  #       run: |
-  #         if [[ $(git diff --stat) != '' ]]; then
-  #           echo 'should be clean'
-  #           exit 1
-  #         else
-  #           exit 0
-  #         fi
-
-  # test_cosign_action_custom:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [macos-latest, ubuntu-latest, windows-latest]
-  #   permissions: {}
-  #   name: Install Custom Cosign and test presence in path
-  #   steps:
-  #     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-  #     - name: Install Kyverno CLI
-  #       uses: ./
-  #       with:
-  #         cosign-release: 'v2.0.2'
-  #     - name: Check install!
-  #       run: cosign version
-  #     - name: Check root directory
-  #       run: |
-  #         if [[ $(git diff --stat) != '' ]]; then
-  #           echo 'should be clean'
-  #           exit 1
-  #         else
-  #           exit 0
-  #         fi
-  #       shell: bash
-
-  # test_cosign_action_0_6_0:
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [macos-latest, ubuntu-latest, windows-latest]
-  #   permissions: {}
-  #   name: Install Cosign v0.6.0 and test presence in path
-  #   steps:
-  #     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-  #     - name: Install Kyverno CLI
-  #       uses: ./
-  #       with:
-  #         cosign-release: 'v0.6.0'
-  #     - name: Check install!
-  #       run: cosign version
-  #     - name: Check root directory
-  #       run: |
-  #         if [[ $(git diff --stat) != '' ]]; then
-  #           echo 'should be clean'
-  #           exit 1
-  #         else
-  #           exit 0
-  #         fi
-  #       shell: bash
-
-  # test_cosign_action_0_6_0_with_pre_installed_libpcsclite1_package:
-  #   # this test is specifically for linux and pcsclite1 dependencies
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     matrix:
-  #       os: [ubuntu-latest]
-  #   permissions: {}
-  #   name: Install Cosign v0.6.0 and test presence in path with pre installed libpcsclite1 package
-  #   steps:
-  #     - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-  #     - name: Install libpcsclite1
-  #       run: |
-  #         sudo apt-get update -q
-  #         sudo apt-get install -yq libpcsclite1
-  #     - name: Install Kyverno CLI
-  #       uses: ./
-  #       with:
-  #         cosign-release: 'v0.6.0'
-  #     - name: Check install!
-  #       run: cosign version
-  #     - name: Check root directory
-  #       run: |
-  #         if [[ $(git diff --stat) != '' ]]; then
-  #           echo 'should be clean'
-  #           exit 1
-  #         else
-  #           exit 0
-  #         fi
+  custom:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest, windows-latest]
+    permissions: {}
+    name: Install Kyverno CLI and test presence in path
+    steps:
+      - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
+      - name: Install Kyverno CLI
+        uses: ./
+        with:
+          cosign-release: 'v1.9.5'
+      - name: Check install
+        run: kyverno version
+      - name: Check root directory
+        shell: bash
+        run: |
+          if [[ $(git diff --stat) != '' ]]; then
+            echo 'should be clean'
+            exit 1
+          else
+            exit 0
+          fi
 
   wrong_version:
     runs-on: ${{ matrix.os }}
