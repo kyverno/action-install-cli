@@ -29,28 +29,6 @@ jobs:
           else
             exit 0
           fi
-          default:
-            runs-on: ${{ matrix.os }}
-            strategy:
-              matrix:
-                os: [macos-latest, ubuntu-latest, windows-latest]
-            permissions: {}
-            name: Install Kyverno CLI and test presence in path
-            steps:
-              - uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
-              - name: Install Kyverno CLI
-                uses: ./
-              - name: Check install
-                run: kyverno version
-              - name: Check root directory
-                shell: bash
-                run: |
-                  if [[ $(git diff --stat) != '' ]]; then
-                    echo 'should be clean'
-                    exit 1
-                  else
-                    exit 0
-                  fi
 
   release:
     runs-on: ${{ matrix.os }}
