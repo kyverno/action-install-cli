@@ -11,7 +11,7 @@ This action currently supports GitHub-provided Linux, macOS and Windows runners 
 Add the following entry to your Github workflow YAML file:
 
 ```yaml
-uses: kyverno/action-install-cli@main
+uses: kyverno/action-install-cli@v0.1.0
 with:
   release: 'v1.9.5' # optional
 ```
@@ -28,7 +28,7 @@ jobs:
     name: Install Kyverno CLI
     steps:
       - name: Install Kyverno CLI
-        uses: kyverno/action-install-cli@main
+        uses: kyverno/action-install-cli@v0.1.0
         with:
           release: 'v1.9.5'
       - name: Check install
@@ -47,7 +47,7 @@ jobs:
     name: Install Kyverno CLI
     steps:
       - name: Install Kyverno CLI
-        uses: kyverno/action-install-cli@main
+        uses: kyverno/action-install-cli@v0.1.0
       - name: Check install
         run: kyverno version
 ```
@@ -72,7 +72,7 @@ jobs:
           go-version: '1.20'
           check-latest: true
       - name: Install Kyverno CLI
-        uses: kyverno/action-install-cli@main
+        uses: kyverno/action-install-cli@v0.1.0
         with:
           release: 'main'
       - name: Check install
