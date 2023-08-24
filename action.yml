@@ -41,6 +41,7 @@ runs:
         fi
 
         set -e
+        set -x
 
         mkdir -p ${{ inputs.install-dir }}
 
