@@ -41,7 +41,6 @@ runs:
         fi
 
         set -e
-        set -x
 
         mkdir -p ${{ inputs.install-dir }}
 
@@ -49,7 +48,7 @@ runs:
         if [[ ${{ inputs.release }} == "main" ]]; then
           log_info "installing via 'go install' from its main version"
           GOBIN=$(go env GOPATH)/bin
-          go install "github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno@main"
+          go install github.com/kyverno/kyverno/cmd/cli/kubectl-kyverno@main
           ln -s $GOBIN/kubectl-kyverno ${{ inputs.install-dir}}/kyverno
           exit 0
         fi
