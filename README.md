@@ -63,6 +63,8 @@ jobs:
 
     name: Install Kyverno CLI
     steps:
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.1
       - name: Install Kyverno CLI
         uses: kyverno/action-install-cli@v0.1.0
         with:
