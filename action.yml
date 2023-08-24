@@ -134,7 +134,12 @@ runs:
           $SUDO curl -sL ${release_archive_url}.sig -o ${release_archive}.sig
           $SUDO curl -sL ${release_archive_url}.pem -o ${release_archive}.pem
 
-          cosign verify-blob --key ${release_archive}.pem --signature ${release_archive}.sig ${release_archive}
+          cosign verify-blob \
+            --certificate ${release_archive}.pem \
+            --signature ${release_archive}.sig \
+            --certificate-identity=https://github.com/kyverno/kyverno/.github/workflows/release.yaml@refs/tags/${{ inputs.release }} \
+            --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+            ${release_archive}
 
           $SUDO rm ${release_archive}.pem
           $SUDO rm ${release_archive}.sig
