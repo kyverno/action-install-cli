@@ -19,6 +19,10 @@ inputs:
     description: Set to true if install-dir location requires sudo privs
     required: false
     default: 'false'
+  verify:
+    description: Set to true if you want to verify the archive with cosign
+    required: false
+    default: 'false'
 runs:
   using: composite
   steps:
@@ -126,6 +130,20 @@ runs:
         log_info "Downloading Kyverno CLI version '${{ inputs.release }}'...\n      ${release_archive_url}"
         $SUDO curl -sL ${release_archive_url} -o ${release_archive}
 
+        if [[ "${{ inputs.verify }}" == "true" ]]; then
+          $SUDO curl -sL ${release_archive_url}.sig -o ${release_archive}.sig
+          $SUDO curl -sL ${release_archive_url}.pem -o ${release_archive}.pem
+
+          cosign verify-blob \
+            --certificate ${release_archive}.pem \
+            --signature ${release_archive}.sig \
+            --certificate-identity=https://github.com/kyverno/kyverno/.github/workflows/release.yaml@refs/tags/${{ inputs.release }} \
+            --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
+            ${release_archive}
+
+          $SUDO rm ${release_archive}.pem
+          $SUDO rm ${release_archive}.sig
+        fi
 
         case ${{ runner.os }} in
           Linux)

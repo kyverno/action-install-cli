@@ -52,6 +52,27 @@ jobs:
         run: kyverno version
 ```
 
+Example using [cosign](https://github.com/sigstore/cosign) verification:
+
+```yaml
+jobs:
+  example:
+    runs-on: ubuntu-latest
+
+    permissions: {}
+
+    name: Install Kyverno CLI
+    steps:
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.1.1
+      - name: Install Kyverno CLI
+        uses: kyverno/action-install-cli@v0.1.0
+        with:
+          verify: true
+      - name: Check install
+        run: kyverno version
+```
+
 If you want to install Kyverno CLI from its main version by using `go install` under the hood, you can set `release` as `main`.
 Once you did that, Kyverno CLI will be installed via `go install` which means that please ensure that go is installed.
 
@@ -88,6 +109,7 @@ The following optional inputs:
 | `release` | `kyverno` version to use instead of the default. |
 | `install-dir` | directory to place the `kyverno` binary into instead of the default (`$HOME/.kyverno`). |
 | `use-sudo` | set to `true` if `install-dir` location requires sudo privs. Defaults to false. |
+| `verify` | set to `true` to enable [cosign](https://github.com/sigstore/cosign) verification of the downloaded archive. |
 
 ## Security
 
