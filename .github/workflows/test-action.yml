@@ -193,3 +193,17 @@ jobs:
           release: main
       - name: Check install
         run: kyverno version
+
+  required:
+    needs:
+    - default
+    - verify
+    - release
+    - custom
+    - wrong_version
+    - custom_dir
+    - custom_dir_root
+    - main
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo "Required jobs success!"
